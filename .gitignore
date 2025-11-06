@@ -23,4 +23,29 @@ dist-ssr
 *.sln
 *.sw?
 
+# Wan2.2 모델 폴더
 Wan2.2/
+models/
+
+# Python 환경
+server/.venv/
+/**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 서버 업로드/출력 폴더
+server/uploads/
+server/outputs/
+
+# 환경 변수 파일
+.env
+.env.local
+.env.*.local
+
+# OS 파일
+Thumbs.db
+.DS_Store

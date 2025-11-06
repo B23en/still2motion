@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { IoMdInformationCircle } from 'react-icons/io'
 
 interface Page1Props {
-  onNext: (file: File) => void
+  onNext: (file: File, filename: string) => void
 }
 
 function Page1({ onNext }: Page1Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -28,9 +29,34 @@ function Page1({ onNext }: Page1Props) {
     }
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (selectedFile) {
-      onNext(selectedFile)
+      setUploading(true)
+
+      try {
+        // 서버로 파일 전송
+        const formData = new FormData()
+        formData.append('file', selectedFile)
+
+        const response = await fetch('http://localhost:8000/api/upload', {
+          method: 'POST',
+          body: formData
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          console.log('Upload successful:', result)
+          onNext(selectedFile, result.filename)
+        } else {
+          alert('업로드 실패: ' + result.error)
+        }
+      } catch (error) {
+        console.error('Upload error:', error)
+        alert('서버 연결 실패. 서버가 실행 중인지 확인해주세요.')
+      } finally {
+        setUploading(false)
+      }
     }
   }
 
@@ -95,8 +121,8 @@ function Page1({ onNext }: Page1Props) {
         <IoMdInformationCircle size={14} />
         1280x704 이상의 크기가 권장됩니다
       </p>
-      <button onClick={handleNext} disabled={!selectedFile}>
-        Next
+      <button onClick={handleNext} disabled={!selectedFile || uploading}>
+        {uploading ? 'Uploading...' : 'Next'}
       </button>
     </div>
   )

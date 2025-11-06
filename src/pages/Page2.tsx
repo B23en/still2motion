@@ -1,18 +1,18 @@
 import { useState } from 'react'
 import { IoMdInformationCircle } from 'react-icons/io'
+import { IoArrowBackCircle } from 'react-icons/io5'
 
 interface Page2Props {
   onNext: (motionType: string) => void
+  onBack: () => void
 }
 
 const recommendedMotions = [
-  { id: 'car', label: 'Idle Motion', icon: '🙂', prompt: 'Generate smooth car driving motion with natural acceleration and deceleration' },
-  { id: 'typing', label: 'Wave Motion', icon: '👋', prompt: 'Create realistic typing motion with finger movements on keyboard' },
-  { id: 'walking', label: 'Smile Motion', icon: '😊', prompt: 'Generate natural walking motion with proper gait and body movement' },
-  { id: 'flying', label: 'Dozing Motion', icon: '😴', prompt: 'Create smooth flying motion with natural aerial movement' }
+  { id: 'idle', label: 'Idle Motion', icon: '🙂', prompt: 'The character is idling' },
+  { id: 'smile', label: 'Sway Motion', icon: '😙', prompt: 'The character is swaying' }
 ]
 
-function Page2({ onNext }: Page2Props) {
+function Page2({ onNext, onBack }: Page2Props) {
   const [selectedMotion, setSelectedMotion] = useState<string>('')
   const [customPrompt, setCustomPrompt] = useState<string>('')
 
@@ -43,17 +43,40 @@ function Page2({ onNext }: Page2Props) {
   const isDisabled = !selectedMotion && !customPrompt.trim()
 
   return (
-    <div className="page">
-      <h1>Select Motion Type</h1>
+    <>
+      {/* 뒤로가기 버튼 - 화면 전체 기준 */}
+      <button
+        onClick={onBack}
+        style={{
+          position: 'fixed',
+          left: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          padding: '0',
+          background: 'transparent',
+          border: 'none',
+          color: '#53535dff',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10
+        }}
+      >
+        <IoArrowBackCircle size={32} />
+      </button>
 
-      {/* 추천 모션 2x2 그리드 */}
+      <div className="page">
+        <h1>Select Motion Prompt</h1>
+
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '1rem',
         width: '100%',
         maxWidth: '400px',
-        marginBottom: '24px'
+        marginTop: '24px',
+        marginBottom: '48px'
       }}>
         {recommendedMotions.map((motion) => (
           <button
@@ -72,7 +95,7 @@ function Page2({ onNext }: Page2Props) {
               transition: 'all 0.2s'
             }}
           >
-            <span style={{ fontSize: '2rem' }}>{motion.icon}</span>
+            <span style={{ fontSize: '1.8rem' }}>{motion.icon}</span>
             <span style={{
               fontSize: '0.875rem',
               color: selectedMotion === motion.id ? '#000' : '#666'
@@ -87,14 +110,14 @@ function Page2({ onNext }: Page2Props) {
       <p style={{
         fontSize: '0.75rem',
         color: '#1f1f20ff',
-        marginBottom: '12px',
+        marginBottom: '8px',
         marginTop: '0',
         display: 'flex',
         alignItems: 'center',
         gap: '0.25rem'
       }}>
         <IoMdInformationCircle size={14} />
-        프롬포트 직접 입력도 가능합니다. (영어 권장)
+        프롬포트 직접 입력 또한 가능합니다. (영어 권장)
       </p>
       <input
         type="text"
@@ -105,7 +128,7 @@ function Page2({ onNext }: Page2Props) {
           setSelectedMotion('')
         }}
         style={{
-          width: '150%',
+          width: '120%',
           maxWidth: '500px',
           padding: '0.35rem',
           border: '2px solid #666',
@@ -115,14 +138,16 @@ function Page2({ onNext }: Page2Props) {
           color: '#000',
           outline: 'none',
           fontFamily: '"Pretendard Variable", Pretendard, sans-serif',
-          marginBottom: '36px'
+          marginBottom: '36px',
+          textAlign: 'center'
         }}
       />
 
       <button onClick={handleNext} disabled={isDisabled}>
         Next
       </button>
-    </div>
+      </div>
+    </>
   )
 }
 
