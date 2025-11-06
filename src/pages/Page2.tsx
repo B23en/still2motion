@@ -35,7 +35,7 @@ function Page2({ onNext, onBack }: Page2Props) {
       )
 
       if (confirmed) {
-        onNext(selectedMotion || customPrompt)
+        onNext(promptText)
       }
     }
   }

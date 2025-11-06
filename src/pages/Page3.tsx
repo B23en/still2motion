@@ -42,10 +42,7 @@ function Page3({ onExit, taskId }: Page3Props) {
 
     ws.onclose = (event) => {
       console.log('WebSocket closed', event.code, event.reason)
-      // 비정상 종료 시에만 에러 로그 추가
-      if (!event.wasClean && !isCompletedRef.current) {
-        setLogs(prev => [...prev, '[ERROR] Connection closed unexpectedly'])
-      }
+      // 에러 로그를 사용자에게 표시하지 않음 (콘솔에만 기록)
     }
 
     return () => {
