@@ -143,6 +143,15 @@ async def websocket_logs(websocket: WebSocket, task_id: str):
         # 이미지 경로
         image_path = os.path.join(UPLOAD_FOLDER, task["filename"])
 
+        # 출력 경로 생성 (task_id별로 고유한 폴더)
+        output_dir = os.path.join(OUTPUT_FOLDER, task_id)
+        os.makedirs(output_dir, exist_ok=True)
+        output_path = os.path.join(output_dir, "output.mp4")
+        absolute_output_path = os.path.abspath(output_path)
+
+        # task에 output 경로 저장
+        task["output"] = output_path
+
         # config.txt에서 파라미터 읽기
         config_path = os.path.join(os.path.dirname(__file__), "config.txt")
         params = []
@@ -167,7 +176,8 @@ async def websocket_logs(websocket: WebSocket, task_id: str):
             "-u",  # unbuffered output
             generate_script,
             "--image", absolute_image_path,
-            "--prompt", f'"{task["prompt"]}"'  # 따옴표로 감싸기
+            "--prompt", f'"{task["prompt"]}"',  # 따옴표로 감싸기
+            "--save_path", absolute_output_path  # 출력 경로 지정
         ]
 
         # config.txt의 파라미터 추가
