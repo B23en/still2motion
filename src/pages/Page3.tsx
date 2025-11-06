@@ -2,15 +2,16 @@ import { useState, useEffect, useRef } from 'react'
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5'
 
 interface Page3Props {
-  onNext: () => void
+  onExit: () => void
   taskId: string
 }
 
-function Page3({ onNext, taskId }: Page3Props) {
+function Page3({ onExit, taskId }: Page3Props) {
   const [showLogs, setShowLogs] = useState(false)
   const [logs, setLogs] = useState<string[]>([])
   const [isCompleted, setIsCompleted] = useState(false)
   const wsRef = useRef<WebSocket | null>(null)
+  const isCompletedRef = useRef(false)
 
   useEffect(() => {
     if (!taskId) return
@@ -30,16 +31,21 @@ function Page3({ onNext, taskId }: Page3Props) {
       // [DONE] 메시지를 받으면 완료 처리
       if (message.includes('[DONE]')) {
         setIsCompleted(true)
+        isCompletedRef.current = true
       }
     }
 
     ws.onerror = (error) => {
       console.error('WebSocket error:', error)
-      setLogs(prev => [...prev, '[ERROR] Connection error'])
+      // onerror에서는 로그를 추가하지 않음 (연결 중 일시적 에러 방지)
     }
 
-    ws.onclose = () => {
-      console.log('WebSocket closed')
+    ws.onclose = (event) => {
+      console.log('WebSocket closed', event.code, event.reason)
+      // 비정상 종료 시에만 에러 로그 추가
+      if (!event.wasClean && !isCompletedRef.current) {
+        setLogs(prev => [...prev, '[ERROR] Connection closed unexpectedly'])
+      }
     }
 
     return () => {
@@ -137,8 +143,8 @@ function Page3({ onNext, taskId }: Page3Props) {
         </div>
       )}
 
-      {/* 완료 후에만 Next 버튼 표시 */}
-      {isCompleted && <button onClick={onNext}>Next</button>}
+      {/* 완료 후에만 Exit 버튼 표시 */}
+      {isCompleted && <button onClick={onExit}>Exit</button>}
 
       <style>{`
         @keyframes bounce {

@@ -154,26 +154,32 @@ async def websocket_logs(websocket: WebSocket, task_id: str):
                         # --key value 형식을 분리해서 추가
                         params.extend(line.split())
 
-        # dummy.py 실행 (나중에 generate.py로 변경)
+        # Wan2.2/generate.py 실행
+        wan22_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "Wan2.2")
+        generate_script = os.path.join(wan22_dir, "generate.py")
+
+        # 이미지 경로를 절대 경로로 변환
+        absolute_image_path = os.path.abspath(image_path)
+
         cmd = [
             "python",
             "-u",  # unbuffered output
-            "dummy.py",
-            "--image", image_path,
+            generate_script,
+            "--image", absolute_image_path,
             "--prompt", f'"{task["prompt"]}"'  # 따옴표로 감싸기
         ]
 
         # config.txt의 파라미터 추가
         cmd.extend(params)
 
-        # subprocess로 실행
+        # subprocess로 실행 (Wan2.2 폴더에서 실행)
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=0,  # unbuffered
-            cwd=os.path.dirname(__file__),
+            cwd=wan22_dir,  # Wan2.2 폴더에서 실행
             universal_newlines=True
         )
 

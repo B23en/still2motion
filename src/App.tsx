@@ -3,9 +3,8 @@ import './App.css'
 import Page1 from './pages/Page1'
 import Page2 from './pages/Page2'
 import Page3 from './pages/Page3'
-import Page4 from './pages/Page4'
 
-type Step = 'page1' | 'page2' | 'page3' | 'page4'
+type Step = 'page1' | 'page2' | 'page3'
 
 function App() {
   const [currentStep, setCurrentStep] = useState<Step>('page1')
@@ -47,20 +46,24 @@ function App() {
       alert('서버 연결 실패. 서버가 실행 중인지 확인해주세요.')
     }
   }
-  const goToPage4 = () => setCurrentStep('page4')
+
   const goBackToPage1 = () => setCurrentStep('page1')
-  const resetToPage1 = () => {
-    setUploadedFile(null)
-    setSelectedMotion('')
-    setCurrentStep('page1')
+
+  const handleExit = () => {
+    // Electron 환경에서 window 닫기
+    if (window.electron) {
+      window.electron.closeWindow()
+    } else {
+      // 브라우저 환경에서는 창 닫기 시도
+      window.close()
+    }
   }
 
   return (
     <div className="container">
       {currentStep === 'page1' && <Page1 onNext={goToPage2} />}
       {currentStep === 'page2' && <Page2 onNext={goToPage3} onBack={goBackToPage1} />}
-      {currentStep === 'page3' && <Page3 onNext={goToPage4} taskId={taskId} />}
-      {currentStep === 'page4' && <Page4 onReset={resetToPage1} />}
+      {currentStep === 'page3' && <Page3 onExit={handleExit} taskId={taskId} />}
     </div>
   )
 }
