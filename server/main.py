@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 import io
 import os
+import sys
 import uuid
 import asyncio
 import subprocess
@@ -162,7 +163,7 @@ async def websocket_logs(websocket: WebSocket, task_id: str):
         absolute_image_path = os.path.abspath(image_path)
 
         cmd = [
-            "python",
+            sys.executable,  # 현재 실행 중인 Python 인터프리터 사용
             "-u",  # unbuffered output
             generate_script,
             "--image", absolute_image_path,
