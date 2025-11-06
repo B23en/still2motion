@@ -215,3 +215,7 @@ async def websocket_logs(websocket: WebSocket, task_id: str):
             tasks[task_id]["status"] = "failed"
     finally:
         await websocket.close()
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
