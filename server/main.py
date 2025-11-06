@@ -161,8 +161,16 @@ async def websocket_logs(websocket: WebSocket, task_id: str):
                     line = line.strip()
                     # 주석이 아니고 빈 줄이 아닌 경우
                     if line and not line.startswith('#'):
-                        # --key value 형식을 분리해서 추가
-                        params.extend(line.split())
+                        parts = line.split()
+                        # --ckpt_dir 경로를 절대 경로로 변환
+                        if len(parts) >= 2 and parts[0] == '--ckpt_dir':
+                            # still2motion 폴더 기준 절대 경로로 변환
+                            still2motion_dir = os.path.dirname(os.path.dirname(__file__))
+                            absolute_ckpt_path = os.path.abspath(os.path.join(still2motion_dir, parts[1]))
+                            params.extend([parts[0], absolute_ckpt_path])
+                        else:
+                            # 다른 파라미터는 그대로 추가
+                            params.extend(parts)
 
         # Wan2.2/generate.py 실행
         wan22_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "Wan2.2")
@@ -177,7 +185,7 @@ async def websocket_logs(websocket: WebSocket, task_id: str):
             generate_script,
             "--image", absolute_image_path,
             "--prompt", f'"{task["prompt"]}"',  # 따옴표로 감싸기
-            "--save_path", absolute_output_path  # 출력 경로 지정
+            "--save_file", absolute_output_path  # 출력 경로 지정
         ]
 
         # config.txt의 파라미터 추가
