@@ -1,30 +1,36 @@
-# React + TypeScript + Vite
+# Still2Motion - Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- *구동환경 호환 및 드라이버 문제로 소스 파일 형태로 공유함*
+- *사용자 환경에 따른 빌드 가능*
 
-Currently, two official plugins are available:
+## 요구 사항
+- 최소 24GB VRAM 이상의 환경 (e.g. RTX 4090)
+- node.js (테스트 환경: 24v.xx)
+- python3 (테스트 환경: 3.10v)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 환경 세팅
+```bash
+npm install
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+# torch >= 2.4.0
+cd server
+pip install -r requirements.txt
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 구동 방법
+```bash
+# UI
+npm run dev
+
+# Server
+cd server
+python ./main.py
+```
+
+## 사용법
+1. Base Character 이미지 업로드 (전신이 나오는 정면 이미지 추천, test_image 폴더 참고)
+2. Motion Prompt 선택 (영어)
+3. 애니메이션 생성 후 outputs 폴더에 저장 (환경에 따라 많은 시간 소요되거나 모델 호환 문제 발생 가능, 로그 확인 요망)
+
+## Generative Model Reference
+**Wan2.2(TI2V-5B):** https://github.com/Wan-Video/Wan2.2?tab=readme-ov-file

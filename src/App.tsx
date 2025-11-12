@@ -8,19 +8,15 @@ type Step = 'page1' | 'page2' | 'page3'
 
 function App() {
   const [currentStep, setCurrentStep] = useState<Step>('page1')
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [uploadedFilename, setUploadedFilename] = useState<string>('')
-  const [selectedMotion, setSelectedMotion] = useState<string>('')
   const [taskId, setTaskId] = useState<string>('')
 
-  const goToPage2 = (file: File, filename: string) => {
-    setUploadedFile(file)
+  const goToPage2 = (_file: File, filename: string) => {
     setUploadedFilename(filename)
     setCurrentStep('page2')
   }
 
   const goToPage3 = async (prompt: string) => {
-    setSelectedMotion(prompt)
 
     // 서버에 generate 요청
     try {

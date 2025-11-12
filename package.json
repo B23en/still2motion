@@ -1,7 +1,10 @@
 {
   "name": "still2motion",
+  "productName": "Still2Motion",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Transform still images into dynamic motion videos",
+  "author": "Your Name",
   "type": "module",
   "scripts": {
     "dev": "vite",
